@@ -1,7 +1,7 @@
 ;;;
 ;;;   Statistic about code coverage measured by Cloverage reporter.
 ;;;
-;;; Copyright (c) 2015  Pavel Tisnovsky, Red Hat
+;;; Copyright (c) 2015, 2016  Pavel Tisnovsky, Red Hat
 ;;; All rights reserved.
 ;;;
 ;;; Redistribution and use in source and binary forms, with or without
@@ -46,6 +46,11 @@
     [config-file-name]
     (let [configuration (config-loader/load-configuration-file config-file-name)]
         (reset! jenkins-url            (:jenkins-url configuration))
-        (reset! jenkins-job-prefix-url (:jenkins-job-prefix-url-url configuration))
+        (reset! jenkins-job-prefix-url (:jenkins-job-prefix-url configuration))
         (reset! jenkins-job-list-url   (:jenkins-job-list-url configuration))))
 
+(defn print-configuration
+    []
+    (println "jenkins-url:            " @jenkins-url)
+    (println "jenkins-job-prefix-url: " @jenkins-job-prefix-url)
+    (println "jenkins-job-list-url:   " @jenkins-job-list-url))
