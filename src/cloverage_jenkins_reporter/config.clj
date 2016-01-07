@@ -42,15 +42,22 @@
     "URL for Jenkins page with job list."
     (atom nil))
 
+(def pattern-for-coverage-jobs
+    "Pattern for all jobs that contains Cloverage reports."
+    (atom nil))
+
 (defn load-configuration
     [config-file-name]
     (let [configuration (config-loader/load-configuration-file config-file-name)]
         (reset! jenkins-url            (:jenkins-url configuration))
         (reset! jenkins-job-prefix-url (:jenkins-job-prefix-url configuration))
-        (reset! jenkins-job-list-url   (:jenkins-job-list-url configuration))))
+        (reset! jenkins-job-list-url   (:jenkins-job-list-url configuration))
+        (reset! pattern-for-coverage-jobs (:pattern-for-coverage-jobs configuration))))
 
 (defn print-configuration
     []
-    (println "jenkins-url:            " @jenkins-url)
-    (println "jenkins-job-prefix-url: " @jenkins-job-prefix-url)
-    (println "jenkins-job-list-url:   " @jenkins-job-list-url))
+    (println "jenkins-url:               " @jenkins-url)
+    (println "jenkins-job-prefix-url:    " @jenkins-job-prefix-url)
+    (println "jenkins-job-list-url:      " @jenkins-job-list-url)
+    (println "pattern-for-coverage-jobs: " @pattern-for-coverage-jobs))
+
