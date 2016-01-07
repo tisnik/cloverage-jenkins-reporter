@@ -1,7 +1,7 @@
 ;;;
 ;;;   Statistic about code coverage measured by Cloverage reporter.
 ;;;
-;;; Copyright (c) 2015  Pavel Tisnovsky, Red Hat
+;;; Copyright (c) 2015, 2016  Pavel Tisnovsky, Red Hat
 ;;; All rights reserved.
 ;;;
 ;;; Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
     :dependencies [[org.clojure/clojure "1.6.0"]
                    [org.clojure/data.json "0.2.5"]
                    [org.clojure/tools.cli "0.3.1"]
+                   [clojure-ini "0.0.1"]
                    [hiccup "1.0.4"]]
     :main ^:skip-aot cloverage-jenkins-reporter.core
     :plugins [[codox "0.8.11"]
