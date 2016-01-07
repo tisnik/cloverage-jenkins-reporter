@@ -1,7 +1,7 @@
 ;;;
 ;;;   Statistic about code coverage measured by Cloverage reporter.
 ;;;
-;;; Copyright (c) 2015  Pavel Tisnovsky, Red Hat
+;;; Copyright (c) 2015, 2016  Pavel Tisnovsky, Red Hat
 ;;; All rights reserved.
 ;;;
 ;;; Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,9 @@
 (require '[cloverage-jenkins-reporter.config :as config])
 
 (defn -main
-    "I don't do a whole lot ... yet."
+    "Entry point to this tool, started by a shell script or from the Leiningen."
     [& args]
     (config/load-configuration "config.cfg")
+    (config/print-configuration)
     (println "Hello, World!"))
 
