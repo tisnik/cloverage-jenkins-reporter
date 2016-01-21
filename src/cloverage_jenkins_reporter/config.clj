@@ -30,34 +30,19 @@
 
 (require '[cloverage-jenkins-reporter.config-loader :as config-loader])
 
-(def jenkins-url
-    "URL for Jenkins page."
-    (atom nil))
-
-(def jenkins-job-prefix-url
-    "URL for Jenkins page with job settings."
-    (atom nil))
-
-(def jenkins-job-list-url
-    "URL for Jenkins page with job list."
-    (atom nil))
-
-(def pattern-for-coverage-jobs
-    "Pattern for all jobs that contains Cloverage reports."
-    (atom nil))
-
 (defn load-configuration
     [config-file-name]
     (let [configuration (config-loader/load-configuration-file config-file-name)]
-        (reset! jenkins-url            (:jenkins-url configuration))
-        (reset! jenkins-job-prefix-url (:jenkins-job-prefix-url configuration))
-        (reset! jenkins-job-list-url   (:jenkins-job-list-url configuration))
-        (reset! pattern-for-coverage-jobs (:pattern-for-coverage-jobs configuration))))
+        {:jenkins {:url                       (:jenkins-url configuration)
+                   :job-prefix-url            (:jenkins-job-prefix-url configuration)
+                   :job-list-url              (:jenkins-job-list-url configuration)
+                   :pattern-for-coverage-jobs (:pattern-for-coverage-jobs configuration)}}))
 
 (defn print-configuration
-    []
-    (println "jenkins-url:               " @jenkins-url)
-    (println "jenkins-job-prefix-url:    " @jenkins-job-prefix-url)
-    (println "jenkins-job-list-url:      " @jenkins-job-list-url)
-    (println "pattern-for-coverage-jobs: " @pattern-for-coverage-jobs))
+    [cfg]
+    (println "[Jenkins]")
+    (println "url:                       " (-> cfg :jenkins :url))
+    (println "job-prefix-url:            " (-> cfg :jenkins :job-prefix-url))
+    (println "job-list-url:              " (-> cfg :jenkins :job-list-url))
+    (println "pattern-for-coverage-jobs: " (-> cfg :jenkins :pattern-for-coverage-jobs)))
 

@@ -34,7 +34,7 @@
 (defn -main
     "Entry point to this tool, started by a shell script or from the Leiningen."
     [& args]
-    (config/load-configuration "config.cfg")
-    (config/print-configuration)
+    (let [cfg (config/load-configuration "config.cfg")]
+        (config/print-configuration cfg))
     (println "Hello, World!"))
 
