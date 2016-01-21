@@ -30,11 +30,29 @@
     (:gen-class))
 
 (require '[cloverage-jenkins-reporter.config :as config])
+(require '[cloverage-jenkins-reporter.jenkins-api :as jenkins-api])
+
+(defn filter-coverage-jobs
+    [jobs pattern-for-coverage-jobs]
+    (println pattern-for-coverage-jobs)
+    (filter #(.endsWith (get % "name") pattern-for-coverage-jobs) jobs))
+
+(defn get-coverage
+    [jobs]
+    jobs)
+
+(defn make-report
+    [jobs]
+    (println jobs))
 
 (defn -main
     "Entry point to this tool, started by a shell script or from the Leiningen."
     [& args]
     (let [cfg (config/load-configuration "config.cfg")]
-        (config/print-configuration cfg))
-    (println "Hello, World!"))
+        (config/print-configuration cfg)
+        (-> (jenkins-api/read-list-of-all-jobs (-> cfg :jenkins :url) (-> cfg :jenkins :job-list-url))
+            (filter-coverage-jobs              (-> cfg :jenkins :pattern-for-coverage-jobs))
+            (get-coverage)
+            (make-report)))
+    (println "Done"))
 
