@@ -111,7 +111,7 @@
                               "<td align='right'>" (:instrumented job) "</td>"
                               "<td align='right'>" (:covered job) "</td>"
                               "<td align='right'>" (:lines-coverage job) "%</td>"
-                              "<td><hr align='left' noshade color='green' width='" (:lines-coverage job) "'></td>"
+                              "<td><div class='progress-bar progress-bar-success progress-bar-striped' style='width:" (:lines-coverage job) "px'></div>"
                               "</td></tr>")))))
 
 (defn -main
