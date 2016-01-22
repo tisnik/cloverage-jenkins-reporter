@@ -34,25 +34,95 @@
 
 (defn filter-coverage-jobs
     [jobs pattern-for-coverage-jobs]
-    (println pattern-for-coverage-jobs)
+    ;(println pattern-for-coverage-jobs)
     (filter #(.endsWith (get % "name") pattern-for-coverage-jobs) jobs))
 
-(defn get-coverage
+(defn get-index-html-url
+    [job-url]
+    (str job-url "lastSuccessfulBuild/artifact/target/coverage/coverage.txt"))
+
+(defn read-lines
+    [url]
+    (try
+        (-> (slurp url)
+            clojure.string/split-lines)
+        (catch Exception e
+            nil)))
+
+(defn parse-line
+    [line]
+    (re-matches #"\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+.*" line))
+
+(defn parsed-lines
+    [lines]
+    ; return only parsed lines, not lines containing header or other unsupported content
+    (filter seq
+        (for [line lines]
+            (parse-line line))))
+
+(defn calc-sum
+    "Calc sum for two consecutive parsed lines (to be used by reduce)."
+    [vector1 vector2]
+    (for [i (range 5)]
+        (+ (nth vector1 i) (nth vector2 i))))
+
+(defn percentage
+    [x y]
+    (Math/round
+        (/ (* 100.0 x) y)))
+
+(defn compute-coverage
+    [job-name lines]
+    (let [pp (for [p (parsed-lines lines)]
+                 (for [i (range 1 6)]
+                     (Integer/parseInt (nth p i))))]
+         (if (seq pp)
+             (let [sum (reduce calc-sum pp)]
+                 {:job-name     job-name
+                  :lines        (nth sum 0)
+                  :non-blank    (nth sum 1)
+                  :instrumented (nth sum 2)
+                  :covered      (nth sum 3)
+                  :lines-coverage (percentage (nth sum 3) (nth sum 2))}
+             ))))
+
+(defn get-coverage-for-job
+    [job]
+    (let [job-url  (get job "url")
+          enabled? (= (get job "color") "blue")
+          job-name (get job "name")]
+          (if enabled?
+              (let [index-html-url (get-index-html-url job-url)
+                    result-file    (read-lines index-html-url)]
+                    (compute-coverage job-name result-file)))))
+
+(defn get-coverage-for-all-jobs
     [jobs]
-    jobs)
+    (for [job jobs]
+        (get-coverage-for-job job)))
 
 (defn make-report
-    [jobs]
-    (println jobs))
+    [jobs jenkins-url]
+    (doseq [job jobs]
+        (when (:job-name job)
+            (println (str "<tr><td><a href='" jenkins-url "job/" (:job-name job) "/lastSuccessfulBuild/artifact/target/coverage/index.html'>" (:job-name job) "</a></td>"
+                              "<td align='right'>" (:lines job) "</td>"
+                              "<td align='right'>" (:non-blank job) "</td>"
+                              "<td align='right'>" (:instrumented job) "</td>"
+                              "<td align='right'>" (:covered job) "</td>"
+                              "<td align='right'>" (:lines-coverage job) "%</td>"
+                              "<td><hr align='left' noshade color='green' width='" (:lines-coverage job) "'></td>"
+                              "</td></tr>")))))
 
 (defn -main
     "Entry point to this tool, started by a shell script or from the Leiningen."
     [& args]
     (let [cfg (config/load-configuration "config.cfg")]
-        (config/print-configuration cfg)
+        ;(config/print-configuration cfg)
         (-> (jenkins-api/read-list-of-all-jobs (-> cfg :jenkins :url) (-> cfg :jenkins :job-list-url))
             (filter-coverage-jobs              (-> cfg :jenkins :pattern-for-coverage-jobs))
-            (get-coverage)
-            (make-report)))
-    (println "Done"))
+            (get-coverage-for-all-jobs)
+            (make-report (-> cfg :jenkins :url))))
+    ;(println "Done")
+)
 
