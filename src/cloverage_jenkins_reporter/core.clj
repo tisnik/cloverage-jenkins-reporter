@@ -110,8 +110,8 @@
                               "<td align='right'>" (:non-blank job) "</td>"
                               "<td align='right'>" (:instrumented job) "</td>"
                               "<td align='right'>" (:covered job) "</td>"
-                              "<td align='right'>" (:lines-coverage job) "%</td>"
-                              "<td><div class='progress-bar progress-bar-success progress-bar-striped' style='width:" (:lines-coverage job) "px'></div>"
+                              ;"<td align='right'>" (:lines-coverage job) "%</td>"
+                              "<td><div class='progress-bar progress-bar-success progress-bar-striped' style='width:" (:lines-coverage job) "%'>" (:lines-coverage job) "</div>"
                               "</td></tr>")))))
 
 (defn -main
