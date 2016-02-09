@@ -44,7 +44,7 @@
 ;
 
 (deftest test-main-existence
-    "Check that the clouseau.core/-main definition exists."
-    (testing "if the clouseau.core/-main definition exists."
-        (is (callable? 'clouseau.core/-main))))
+    "Check that the cloverage-jenkins-reporter.core/-main definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/-main definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/-main))))
 
