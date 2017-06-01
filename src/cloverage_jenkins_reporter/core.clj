@@ -101,6 +101,13 @@
     (for [job jobs]
         (get-coverage-for-job job)))
 
+(defn get-progress-bar-style
+    [coverage]
+    (cond
+        (< coverage 25) "progress-bar-danger"
+        (< coverage 75) "progress-bar-warning"
+        :else           "progress-bar-success"))
+
 (defn make-report
     [jobs jenkins-url]
     (doseq [job jobs]
@@ -111,7 +118,10 @@
                               "<td align='right'>" (:instrumented job) "</td>"
                               "<td align='right'>" (:covered job) "</td>"
                               ;"<td align='right'>" (:lines-coverage job) "%</td>"
-                              "<td><div class='progress-bar progress-bar-success progress-bar-striped' style='width:" (:lines-coverage job) "%'>" (:lines-coverage job) "</div>"
+                              "<td><div class='progress-bar "
+                                  (get-progress-bar-style (:lines-coverage job))
+                                  " progress-bar-striped' style='width:" (:lines-coverage job) "%'>"
+                                  (:lines-coverage job) "</div>"
                               "</td></tr>")))))
 
 (defn -main
