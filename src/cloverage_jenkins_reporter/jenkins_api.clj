@@ -30,6 +30,11 @@
 
 (require '[clojure.data.json       :as json])
 
+(defn encode-spaces
+    "Encode spaces in URL into its codes."
+    [^String url]
+    (clojure.string/replace url " " "%20"))
+
 (defn list-of-all-jobs-url
     [jenkins-url jenkins-job-list-url]
     (str jenkins-url jenkins-job-list-url))
@@ -44,7 +49,7 @@
 (defn read-job-info-as-json
     "Fetch the timestamp and duration of the last build from Jenkins server."
     [jenkins-url jenkins-job-prefix-url job-name]
-    (let [full-json-url (str jenkins-url jenkins-job-prefix-url (.replace job-name " " "%20") "/lastBuild/api/json?pretty=true")
+    (let [full-json-url (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/lastBuild/api/json?pretty=true")
           inputstr (slurp full-json-url)]
         (if inputstr
             (let [parsed   (json/read-str inputstr)
@@ -57,18 +62,13 @@
 
 (defn read-build-number-for-job
     [jenkins-url jenkins-job-prefix-url job-name]
-    (let [full-json-url (str jenkins-url jenkins-job-prefix-url (.replace job-name " " "%20") "/api/json?pretty=true")
+    (let [full-json-url (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/api/json?pretty=true")
           inputstr (slurp full-json-url)]
         (if inputstr
             (-> (json/read-str inputstr)
                 (get "lastBuild")
                 (get "number"))
             nil)))
-
-(defn encode-spaces
-    "Encode spaces in URL into its codes."
-    [^String url]
-    (clojure.string/replace url " " "%20"))
 
 (defn url-to-file-from-last-build
     [jenkins-url jenkins-job-prefix-url job-name file-name]
