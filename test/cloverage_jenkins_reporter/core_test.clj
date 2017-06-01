@@ -43,7 +43,73 @@
 ; Tests for various defs and functions
 ;
 
-(deftest test-main-existence
+(deftest test-filter-coverage-jobs-existence
+    "Check that the cloverage-jenkins-reporter.core/filter-coverage-jobs definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/filter-coverage-jobs definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/filter-coverage-jobs))))
+
+
+(deftest test-get-index-html-url-existence
+    "Check that the cloverage-jenkins-reporter.core/get-index-html-url definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/get-index-html-url definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/get-index-html-url))))
+
+
+(deftest test-read-lines-existence
+    "Check that the cloverage-jenkins-reporter.core/read-lines definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/read-lines definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/read-lines))))
+
+
+(deftest test-parse-line-existence
+    "Check that the cloverage-jenkins-reporter.core/parse-line definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/parse-line definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/parse-line))))
+
+
+(deftest test-parsed-lines-existence
+    "Check that the cloverage-jenkins-reporter.core/parsed-lines definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/parsed-lines definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/parsed-lines))))
+
+
+(deftest test-calc-sum-existence
+    "Check that the cloverage-jenkins-reporter.core/calc-sum definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/calc-sum definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/calc-sum))))
+
+
+(deftest test-percentage-existence
+    "Check that the cloverage-jenkins-reporter.core/percentage definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/percentage definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/percentage))))
+
+
+(deftest test-compute-coverage-existence
+    "Check that the cloverage-jenkins-reporter.core/compute-coverage definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/compute-coverage definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/compute-coverage))))
+
+
+(deftest test-get-coverage-for-job-existence
+    "Check that the cloverage-jenkins-reporter.core/get-coverage-for-job definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/get-coverage-for-job definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/get-coverage-for-job))))
+
+
+(deftest test-get-coverage-for-all-jobs-existence
+    "Check that the cloverage-jenkins-reporter.core/get-coverage-for-all-jobs definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/get-coverage-for-all-jobs definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/get-coverage-for-all-jobs))))
+
+
+(deftest test-make-report-existence
+    "Check that the cloverage-jenkins-reporter.core/make-report definition exists."
+    (testing "if the cloverage-jenkins-reporter.core/make-report definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.core/make-report))))
+
+
+(deftest test--main-existence
     "Check that the cloverage-jenkins-reporter.core/-main definition exists."
     (testing "if the cloverage-jenkins-reporter.core/-main definition exists."
         (is (callable? 'cloverage-jenkins-reporter.core/-main))))
