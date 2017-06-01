@@ -121,3 +121,34 @@
     (testing "the function jenkins-api/encode-spaces"
         (is (thrown? NullPointerException (encode-spaces nil)))))
 
+(deftest test-job-name->url-1
+    "Check the clj-jenkins-api.jenkins-api/job-name->url"
+    (testing "the clj-jenkins-api.jenkins-api/job-name->url"
+        (are [x y] (= x y)
+            "job/"                  (job-name->url "" "job/" "")
+            " job/"                 (job-name->url " " "job/" "")
+            "jenkins-url/job/"      (job-name->url "jenkins-url/" "job/" "")
+            "jenkins-url:8080/job/" (job-name->url "jenkins-url:8080/" "job/" ""))))
+
+(deftest test-job-name->url-2
+    "Check the clj-jenkins-api.jenkins-api/job-name->url"
+    (testing "the clj-jenkins-api.jenkins-api/job-name->url"
+        (are [x y] (= x y)
+            "jenkins-url:8080/job/"                  (job-name->url "jenkins-url:8080/" "job/" "")
+            "jenkins-url:8080/job/job-name"          (job-name->url "jenkins-url:8080/" "job/" "job-name")
+            "jenkins-url:8080/job/job%20name"        (job-name->url "jenkins-url:8080/" "job/" "job name")
+            "jenkins-url:8080/job/long%20job%20name" (job-name->url "jenkins-url:8080/" "job/" "long job name"))))
+
+(deftest test-job-name->url-not-NPE
+    "Check the clj-jenkins-api.jenkins-api/job-name->url"
+    (testing "the clj-jenkins-api.jenkins-api/job-name->url"
+        (are [x y] (= x y)
+            "job/"  (job-name->url "" "job/"  "")
+            "job/"  (job-name->url nil "job/" ""))))
+
+(deftest test-job-name->url-NPE
+    "Check the clj-jenkins-api.jenkins-api/job-name->url"
+    (testing "the clj-jenkins-api.jenkins-api/job-name->url"
+        (is (thrown? NullPointerException (job-name->url ""  nil nil)))
+        (is (thrown? NullPointerException (job-name->url nil nil nil)))))
+
