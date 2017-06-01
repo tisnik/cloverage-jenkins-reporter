@@ -28,7 +28,7 @@
 
 (ns cloverage-jenkins-reporter.jenkins-api-test
   (:require [clojure.test :refer :all]
-            [cloverage-jenkins-reporter.core :refer :all]))
+            [cloverage-jenkins-reporter.jenkins-api :refer :all]))
 
 ;
 ; Common functions used by tests.
@@ -67,10 +67,10 @@
         (is (callable? 'cloverage-jenkins-reporter.jenkins-api/read-build-number-for-job))))
 
 
-(deftest test-encode-space-existence
-    "Check that the cloverage-jenkins-reporter.jenkins-api/encode-space definition exists."
-    (testing "if the cloverage-jenkins-reporter.jenkins-api/encode-space definition exists."
-        (is (callable? 'cloverage-jenkins-reporter.jenkins-api/encode-space))))
+(deftest test-encode-spaces-existence
+    "Check that the cloverage-jenkins-reporter.jenkins-api/encode-spaces definition exists."
+    (testing "if the cloverage-jenkins-reporter.jenkins-api/encode-spaces definition exists."
+        (is (callable? 'cloverage-jenkins-reporter.jenkins-api/encode-spaces))))
 
 
 (deftest test-url-to-file-from-last-build-existence
@@ -95,4 +95,29 @@
     "Check that the cloverage-jenkins-reporter.jenkins-api/read-job-configuration definition exists."
     (testing "if the cloverage-jenkins-reporter.jenkins-api/read-job-configuration definition exists."
         (is (callable? 'cloverage-jenkins-reporter.jenkins-api/read-job-configuration))))
+
+;
+; Actual tests
+;
+
+(deftest test-encode-spaces
+    "Check the jenkins-api/encode-spaces function"
+    (testing "the jenkins-api/encode-spaces function"
+        (are [x y] (= x y)
+            ""            (encode-spaces "")
+            "%20"         (encode-spaces " ")
+            "%20%20"      (encode-spaces "  ")
+            "%20%20%20"   (encode-spaces "   ")
+            "x%20"        (encode-spaces "x ")
+            "x%20%20"     (encode-spaces "x  ")
+            "%20y"        (encode-spaces " y")
+            "%20%20y"     (encode-spaces "  y")
+            "x%20y"       (encode-spaces "x y")
+            "x%20y%20z"   (encode-spaces "x y z")
+            "x%20%20%20z" (encode-spaces "x   z"))))
+
+(deftest test-encode-spaces-NPE
+    "Check the function the jenkins-api/encode-spaces"
+    (testing "the function jenkins-api/encode-spaces"
+        (is (thrown? NullPointerException (encode-spaces nil)))))
 
