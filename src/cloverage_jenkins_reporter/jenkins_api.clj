@@ -35,6 +35,12 @@
     [^String url]
     (clojure.string/replace url " " "%20"))
 
+(defn job-url
+    ( [jenkins-url jenkins-job-prefix-url job-name]
+      (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name)))
+    ( [jenkins-url jenkins-job-prefix-url job-name postfix]
+      (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) postfix)))
+
 (defn list-of-all-jobs-url
     [jenkins-url jenkins-job-list-url]
     (str jenkins-url jenkins-job-list-url))
@@ -49,7 +55,7 @@
 (defn read-job-info-as-json
     "Fetch the timestamp and duration of the last build from Jenkins server."
     [jenkins-url jenkins-job-prefix-url job-name]
-    (let [full-json-url (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/lastBuild/api/json?pretty=true")
+    (let [full-json-url (job-url jenkins-url jenkins-job-prefix-url job-name "/lastBuild/api/json?pretty=true")
           inputstr (slurp full-json-url)]
         (if inputstr
             (let [parsed   (json/read-str inputstr)
@@ -62,7 +68,7 @@
 
 (defn read-build-number-for-job
     [jenkins-url jenkins-job-prefix-url job-name]
-    (let [full-json-url (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/api/json?pretty=true")
+    (let [full-json-url (job-url jenkins-url jenkins-job-prefix-url job-name "/api/json?pretty=true")
           inputstr (slurp full-json-url)]
         (if inputstr
             (-> (json/read-str inputstr)
@@ -72,11 +78,11 @@
 
 (defn url-to-file-from-last-build
     [jenkins-url jenkins-job-prefix-url job-name file-name]
-    (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/lastBuild/artifact/" file-name))
+    (str (job-url jenkins-url jenkins-job-prefix-url job-name "/lastBuild/artifact/") file-name))
 
 (defn url-to-job-configuration
     [jenkins-url jenkins-job-prefix-url job-name]
-    (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/config.xml"))
+    (str (job-url jenkins-url jenkins-job-prefix-url job-name "/config.xml")))
 
 (defn read-file-from-last-build
     [job-name file-name]
