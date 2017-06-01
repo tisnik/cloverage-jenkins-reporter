@@ -28,7 +28,7 @@
 
 (ns cloverage-jenkins-reporter.config-loader-test
   (:require [clojure.test :refer :all]
-            [cloverage-jenkins-reporter.config :refer :all]))
+            [cloverage-jenkins-reporter.config-loader :refer :all]))
 
 ;
 ; Common functions used by tests.
@@ -53,4 +53,29 @@
     "Check that the cloverage-jenkins-reporter.config-loader/load-configuration-file definition exists."
     (testing "if the cloverage-jenkins-reporter.config-loader/load-configuration-file definition exists."
         (is (callable? 'cloverage-jenkins-reporter.config-loader/load-configuration-file))))
+
+;
+; Test for function behaviours
+;
+
+(deftest test-properties->map-1
+    "Check the behaviour of function emender-jenkins/properties->map."
+    (let [property (doto (new java.util.Properties)
+                         (.setProperty "a" "A")
+                         (.setProperty "b" "B"))]
+        (is (= {:a 'A :b 'B} (properties->map property)))))
+
+(deftest test-properties->map-2
+    "Check the behaviour of function emender-jenkins/properties->map."
+    (let [property (doto (new java.util.Properties)
+                         (.setProperty "propertyA" "property_a")
+                         (.setProperty "propertyB" "property_b"))]
+        (is (= {:propertyA 'property_a :propertyB 'property_b} (properties->map property)))))
+
+(deftest test-properties->map-3
+    "Check the behaviour of function emender-jenkins/properties->map."
+    (let [property (doto (new java.util.Properties)
+                         (.setProperty "value1" "1")
+                         (.setProperty "value2" "2"))]
+        (is (= {:value1 1 :value2 2} (properties->map property)))))
 
