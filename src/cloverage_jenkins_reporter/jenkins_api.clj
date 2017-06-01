@@ -65,17 +65,18 @@
                 (get "number"))
             nil)))
 
-(defn encode-space
-    [string]
-    (.replace string " " "%20"))
+(defn encode-spaces
+    "Encode spaces in URL into its codes."
+    [^String url]
+    (clojure.string/replace url " " "%20"))
 
 (defn url-to-file-from-last-build
     [jenkins-url jenkins-job-prefix-url job-name file-name]
-    (str jenkins-url jenkins-job-prefix-url (encode-space job-name) "/lastBuild/artifact/" file-name))
+    (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/lastBuild/artifact/" file-name))
 
 (defn url-to-job-configuration
     [jenkins-url jenkins-job-prefix-url job-name]
-    (str jenkins-url jenkins-job-prefix-url (encode-space job-name) "/config.xml"))
+    (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) "/config.xml"))
 
 (defn read-file-from-last-build
     [job-name file-name]
