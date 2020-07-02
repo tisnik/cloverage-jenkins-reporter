@@ -29,15 +29,15 @@
 (ns cloverage-jenkins-reporter.config-loader)
 
 (defn properties->map
-    [properties]
-    (into {}
+  [properties]
+  (into {}
         (for [[k v] properties]
               [(keyword k) v])))
 
 (defn load-configuration-file
-    [file-name]
-    (with-open [reader (clojure.java.io/reader file-name)] 
-        (let [properties (java.util.Properties.)]
-            (.load properties reader)
-            (properties->map properties))))
+  [file-name]
+  (with-open [reader (clojure.java.io/reader file-name)]
+    (let [properties (java.util.Properties.)]
+      (.load properties reader)
+      (properties->map properties))))
 
