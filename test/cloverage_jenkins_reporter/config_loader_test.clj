@@ -35,53 +35,59 @@
 ;
 
 (defn callable?
-    "Test if given function-name is bound to the real function."
-    [function-name]
-    (clojure.test/function? function-name))
+  "Test if given function-name is bound to the real function."
+  [function-name]
+  (clojure.test/function? function-name))
 
 ;
 ; Tests for various defs and functions
 ;
 
 (deftest test-properties->map-existence
-    "Check that the cloverage-jenkins-reporter.config-loader/properties->map definition exists."
-    (testing "if the cloverage-jenkins-reporter.config-loader/properties->map definition exists."
-        (is (callable? 'cloverage-jenkins-reporter.config-loader/properties->map))))
+  "Check that the cloverage-jenkins-reporter.config-loader/properties->map definition exists."
+  (testing
+    "if the cloverage-jenkins-reporter.config-loader/properties->map definition exists."
+    (is (callable? 'cloverage-jenkins-reporter.config-loader/properties->map))))
 
 
 (deftest test-load-configuration-file-existence
-    "Check that the cloverage-jenkins-reporter.config-loader/load-configuration-file definition exists."
-    (testing "if the cloverage-jenkins-reporter.config-loader/load-configuration-file definition exists."
-        (is (callable? 'cloverage-jenkins-reporter.config-loader/load-configuration-file))))
+  "Check that the cloverage-jenkins-reporter.config-loader/load-configuration-file definition exists."
+  (testing
+    "if the cloverage-jenkins-reporter.config-loader/load-configuration-file definition exists."
+    (is (callable?
+          'cloverage-jenkins-reporter.config-loader/load-configuration-file))))
 
 ;
 ; Test for function behaviours
 ;
 
 (deftest test-properties->map-1
-    "Check the behaviour of function emender-jenkins/properties->map."
-    (let [property (doto (new java.util.Properties)
-                         (.setProperty "a" "A")
-                         (.setProperty "b" "B"))]
-        (is (= {:a "A" :b "B"} (properties->map property)))))
+  "Check the behaviour of function emender-jenkins/properties->map."
+  (let [property (doto (new java.util.Properties)
+                       (.setProperty "a" "A")
+                       (.setProperty "b" "B"))]
+    (is (= {:a "A" :b "B"} (properties->map property)))))
 
 (deftest test-properties->map-2
-    "Check the behaviour of function emender-jenkins/properties->map."
-    (let [property (doto (new java.util.Properties)
-                         (.setProperty "propertyA" "property_a")
-                         (.setProperty "propertyB" "property_b"))]
-        (is (= {:propertyA "property_a" :propertyB "property_b"} (properties->map property)))))
+  "Check the behaviour of function emender-jenkins/properties->map."
+  (let [property (doto (new java.util.Properties)
+                       (.setProperty "propertyA" "property_a")
+                       (.setProperty "propertyB" "property_b"))]
+    (is (= {:propertyA "property_a", :propertyB "property_b"}
+           (properties->map property)))))
 
 (deftest test-properties->map-3
-    "Check the behaviour of function emender-jenkins/properties->map."
-    (let [property (doto (new java.util.Properties)
-                         (.setProperty "value1" "1")
-                         (.setProperty "value2" "2"))]
-        (is (= {:value1 "1" :value2 "2"} (properties->map property)))))
+  "Check the behaviour of function emender-jenkins/properties->map."
+  (let [property (doto (new java.util.Properties)
+                       (.setProperty "value1" "1")
+                       (.setProperty "value2" "2"))]
+    (is (= {:value1 "1", :value2 "2"}
+           (properties->map property)))))
 
 (deftest test-load-configuration-file
-    "Check the behaviour of function emender-jenkins/load-configuration-file."
-    (println (properties->map (load-configuration-file "test/test1.properties")))
-    (let [property (load-configuration-file "test/test1.properties")]
-        (is (= {:value1 "value1" :value2 "42" :value3 "3"} (properties->map property)))))
+  "Check the behaviour of function emender-jenkins/load-configuration-file."
+  (println (properties->map (load-configuration-file "test/test1.properties")))
+  (let [property (load-configuration-file "test/test1.properties")]
+    (is (= {:value1 "value1", :value2 "42", :value3 "3"}
+           (properties->map property)))))
 
