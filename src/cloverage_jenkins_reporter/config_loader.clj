@@ -29,12 +29,14 @@
 (ns cloverage-jenkins-reporter.config-loader)
 
 (defn properties->map
+  "Transform Java properties into regular Clojure map."
   [properties]
   (into {}
         (for [[k v] properties]
               [(keyword k) v])))
 
 (defn load-configuration-file
+  "Load property file and convert its content into Clojure map."
   [file-name]
   (with-open [reader (clojure.java.io/reader file-name)]
     (let [properties (java.util.Properties.)]
