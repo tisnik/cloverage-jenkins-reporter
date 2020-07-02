@@ -38,10 +38,12 @@
   (filter #(.endsWith (get % "name") pattern-for-coverage-jobs) jobs))
 
 (defn get-index-html-url
+  "Retrieve URL to file with code coverage."
   [job-url]
   (str job-url "lastSuccessfulBuild/artifact/target/coverage/coverage.txt"))
 
 (defn read-lines
+  "Read all lines from specified URL."
   [url]
   (try (-> (slurp url)
            clojure.string/split-lines)
@@ -49,10 +51,12 @@
               nil)))
 
 (defn parse-line
+  "Parse one given line."
   [line]
   (re-matches #"\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+.*" line))
 
 (defn parsed-lines
+  "Parse all input lines."
   [lines]
   ; return only parsed lines, not lines containing header or other unsupported
   ; content
@@ -61,17 +65,19 @@
          (parse-line line))))
 
 (defn calc-sum
-  "Calc sum for two consecutive parsed lines (to be used by reduce)."
+  "Calculate sum for two consecutive parsed lines (to be used by reduce)."
   [vector1 vector2]
   (for [i (range 5)]
        (+ (nth vector1 i) (nth vector2 i))))
 
 (defn percentage
+  "Compute the percentage of x/y."
   [x y]
   (Math/round
     (/ (* 100.0 x) y)))
 
 (defn compute-coverage
+  "Compute code coverage."
   [job-name lines]
   (let [pp (for [p (parsed-lines lines)]
                 (for [i (range 1 6)]
@@ -86,6 +92,7 @@
          :lines-coverage (percentage (nth sum 3) (nth sum 2))}))))
 
 (defn get-coverage-for-job
+  "Read code coverage for specified Jenkins job."
   [job]
   (let [job-url  (get job "url")
         enabled? (= (get job "color") "blue")
@@ -96,17 +103,20 @@
         (compute-coverage job-name result-file)))))
 
 (defn get-coverage-for-all-jobs
+  "Read code coverage for all jobs."
   [jobs]
   (for [job jobs]
        (get-coverage-for-job job)))
 
 (defn get-progress-bar-style
+  "Retrieve the progress bar style according to code coverage read from Jenkins."
   [coverage]
   (cond (< coverage 25) "progress-bar-danger"
         (< coverage 75) "progress-bar-warning"
         :else           "progress-bar-success"))
 
 (defn make-report
+  "Prepare HTML report for specified jobs."
   [jobs jenkins-url]
   (doseq [job jobs]
     (when (:job-name job)
