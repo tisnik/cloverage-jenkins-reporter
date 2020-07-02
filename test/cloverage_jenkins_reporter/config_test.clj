@@ -35,22 +35,24 @@
 ;
 
 (defn callable?
-    "Test if given function-name is bound to the real function."
-    [function-name]
-    (clojure.test/function? function-name))
+  "Test if given function-name is bound to the real function."
+  [function-name]
+  (clojure.test/function? function-name))
 
 ;
 ; Tests for various defs and functions
 ;
 
 (deftest test-load-configuration-existence
-    "Check that the cloverage-jenkins-reporter.config/load-configuration definition exists."
-    (testing "if the cloverage-jenkins-reporter.config/load-configuration definition exists."
-        (is (callable? 'cloverage-jenkins-reporter.config/load-configuration))))
+  "Check that the cloverage-jenkins-reporter.config/load-configuration definition exists."
+  (testing
+    "if the cloverage-jenkins-reporter.config/load-configuration definition exists."
+    (is (callable? 'cloverage-jenkins-reporter.config/load-configuration))))
 
 
 (deftest test-print-configuration-existence
-    "Check that the cloverage-jenkins-reporter.config/print-configuration definition exists."
-    (testing "if the cloverage-jenkins-reporter.config/print-configuration definition exists."
-        (is (callable? 'cloverage-jenkins-reporter.config/print-configuration))))
+  "Check that the cloverage-jenkins-reporter.config/print-configuration definition exists."
+  (testing
+    "if the cloverage-jenkins-reporter.config/print-configuration definition exists."
+    (is (callable? 'cloverage-jenkins-reporter.config/print-configuration))))
 
