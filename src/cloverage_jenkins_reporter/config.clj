@@ -31,6 +31,7 @@
 (require '[cloverage-jenkins-reporter.config-loader :as config-loader])
 
 (defn load-configuration
+  "Load configuration from configuration file specified by its name."
   [config-file-name]
   (let [configuration (config-loader/load-configuration-file config-file-name)]
     {:jenkins {:url                       (:jenkins-url
@@ -43,6 +44,7 @@
                                             configuration)}}))
 
 (defn print-configuration
+  "Print actual configuration."
   [cfg]
   (println "[Jenkins]")
   (println "url:                       " (-> cfg :jenkins :url))
