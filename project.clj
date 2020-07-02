@@ -31,7 +31,7 @@
     :url "http://example.com/FIXME"
     :license {:name "BSD 3-Clause license"
               :url "http://opensource.org/licenses/BSD-3-Clause"}
-    :dependencies [[org.clojure/clojure "1.6.0"]
+    :dependencies [[org.clojure/clojure "1.8.0"]
                    [org.clojure/data.json "0.2.5"]
                    [org.clojure/tools.cli "0.3.1"]
                    [clojure-ini "0.0.1"]
