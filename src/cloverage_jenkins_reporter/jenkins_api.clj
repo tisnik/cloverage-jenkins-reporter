@@ -36,16 +36,19 @@
   (clojure.string/replace url " " "%20"))
 
 (defn job-name->url
+  "Convert job name into URL to job."
   ([jenkins-url jenkins-job-prefix-url job-name]
    (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name)))
   ([jenkins-url jenkins-job-prefix-url job-name postfix]
    (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) postfix)))
 
 (defn list-of-all-jobs-url
+  "Construct URL to get list of all jobs."
   [jenkins-url jenkins-job-list-url]
   (str jenkins-url jenkins-job-list-url))
 
 (defn read-list-of-all-jobs
+  "Read list of all jobs from given URL."
   [jenkins-url jenkins-job-list-url]
   (let [data (json/read-str
                (slurp (list-of-all-jobs-url jenkins-url jenkins-job-list-url)))]
@@ -70,6 +73,7 @@
          :sha       (get branch "SHA1") }))))
 
 (defn read-build-number-for-job
+  "Read build number for specified job."
   [jenkins-url jenkins-job-prefix-url job-name]
   (let [full-json-url (job-name->url jenkins-url
                                      jenkins-job-prefix-url
@@ -83,6 +87,7 @@
       nil)))
 
 (defn url-to-file-from-last-build
+  "Construct URL to some file from the last build."
   [jenkins-url jenkins-job-prefix-url job-name file-name]
   (str (job-name->url jenkins-url
                       jenkins-job-prefix-url
@@ -91,11 +96,13 @@
        file-name))
 
 (defn url-to-job-configuration
+  "Construct URL to retrieve job configuration."
   [jenkins-url jenkins-job-prefix-url job-name]
   (str
     (job-name->url jenkins-url jenkins-job-prefix-url job-name "/config.xml")))
 
 (defn read-file-from-last-build
+  "Read some file from the last build."
   [job-name file-name]
   (let [full-url (url-to-file-from-last-build job-name file-name)]
     (try (slurp full-url)
@@ -103,6 +110,7 @@
                 nil))))
 
 (defn read-job-configuration
+  "Read job configuration for given job from Jenkins."
   [job-name]
   (let [full-url (url-to-job-configuration job-name)]
     (try (clojure.string/split-lines (slurp full-url))
