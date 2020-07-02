@@ -28,73 +28,83 @@
 
 (ns cloverage-jenkins-reporter.jenkins-api)
 
-(require '[clojure.data.json       :as json])
+(require '[clojure.data.json :as json])
 
 (defn encode-spaces
-    "Encode spaces in URL into its codes."
-    [^String url]
-    (clojure.string/replace url " " "%20"))
+  "Encode spaces in URL into its codes."
+  [^String url]
+  (clojure.string/replace url " " "%20"))
 
 (defn job-name->url
-    ( [jenkins-url jenkins-job-prefix-url job-name]
-      (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name)))
-    ( [jenkins-url jenkins-job-prefix-url job-name postfix]
-      (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) postfix)))
+  ([jenkins-url jenkins-job-prefix-url job-name]
+   (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name)))
+  ([jenkins-url jenkins-job-prefix-url job-name postfix]
+   (str jenkins-url jenkins-job-prefix-url (encode-spaces job-name) postfix)))
 
 (defn list-of-all-jobs-url
-    [jenkins-url jenkins-job-list-url]
-    (str jenkins-url jenkins-job-list-url))
+  [jenkins-url jenkins-job-list-url]
+  (str jenkins-url jenkins-job-list-url))
 
 (defn read-list-of-all-jobs
-    [jenkins-url jenkins-job-list-url]
-    (let [data (json/read-str (slurp (list-of-all-jobs-url jenkins-url jenkins-job-list-url)))]
-        (if data
-            (get data "jobs")
-            nil)))
+  [jenkins-url jenkins-job-list-url]
+  (let [data (json/read-str
+               (slurp (list-of-all-jobs-url jenkins-url jenkins-job-list-url)))]
+    (if data
+        (get data "jobs")
+        nil)))
 
 (defn read-job-info-as-json
-    "Fetch the timestamp and duration of the last build from Jenkins server."
-    [jenkins-url jenkins-job-prefix-url job-name]
-    (let [full-json-url (job-name->url jenkins-url jenkins-job-prefix-url job-name "/lastBuild/api/json?pretty=true")
-          inputstr (slurp full-json-url)]
-        (if inputstr
-            (let [parsed   (json/read-str inputstr)
-                  branch   (get (nth (get parsed "actions") 2) "lastBuiltRevision")]
-                {:timestamp (get parsed "timestamp")
-                 :duration  (get parsed "duration")
-                 :branch    (get (first (get branch "branch")) "name")
-                 :sha       (get branch "SHA1")
-                }))))
+  "Fetch the timestamp and duration of the last build from Jenkins server."
+  [jenkins-url jenkins-job-prefix-url job-name]
+  (let [full-json-url (job-name->url jenkins-url
+                                     jenkins-job-prefix-url
+                                     job-name
+                                     "/lastBuild/api/json?pretty=true")
+        inputstr (slurp full-json-url)]
+    (if inputstr
+      (let [parsed (json/read-str inputstr)
+            branch (get (nth (get parsed "actions") 2) "lastBuiltRevision")]
+        {:timestamp (get parsed "timestamp"),
+         :duration  (get parsed "duration"),
+         :branch    (get (first (get branch "branch")) "name"),
+         :sha       (get branch "SHA1") }))))
 
 (defn read-build-number-for-job
-    [jenkins-url jenkins-job-prefix-url job-name]
-    (let [full-json-url (job-name->url jenkins-url jenkins-job-prefix-url job-name "/api/json?pretty=true")
-          inputstr (slurp full-json-url)]
-        (if inputstr
-            (-> (json/read-str inputstr)
-                (get "lastBuild")
-                (get "number"))
-            nil)))
+  [jenkins-url jenkins-job-prefix-url job-name]
+  (let [full-json-url (job-name->url jenkins-url
+                                     jenkins-job-prefix-url
+                                     job-name
+                                     "/api/json?pretty=true")
+        inputstr (slurp full-json-url)]
+    (if inputstr
+      (-> (json/read-str inputstr)
+          (get "lastBuild")
+          (get "number"))
+      nil)))
 
 (defn url-to-file-from-last-build
-    [jenkins-url jenkins-job-prefix-url job-name file-name]
-    (str (job-name->url jenkins-url jenkins-job-prefix-url job-name "/lastBuild/artifact/") file-name))
+  [jenkins-url jenkins-job-prefix-url job-name file-name]
+  (str (job-name->url jenkins-url
+                      jenkins-job-prefix-url
+                      job-name
+                      "/lastBuild/artifact/")
+       file-name))
 
 (defn url-to-job-configuration
-    [jenkins-url jenkins-job-prefix-url job-name]
-    (str (job-name->url jenkins-url jenkins-job-prefix-url job-name "/config.xml")))
+  [jenkins-url jenkins-job-prefix-url job-name]
+  (str
+    (job-name->url jenkins-url jenkins-job-prefix-url job-name "/config.xml")))
 
 (defn read-file-from-last-build
-    [job-name file-name]
-    (let [full-url (url-to-file-from-last-build job-name file-name)]
-        (try
-            (slurp full-url)
-            (catch Exception e nil))))
+  [job-name file-name]
+  (let [full-url (url-to-file-from-last-build job-name file-name)]
+    (try (slurp full-url)
+         (catch Exception e
+                nil))))
 
 (defn read-job-configuration
-    [job-name]
-    (let [full-url (url-to-job-configuration job-name)]
-        (try
-            (clojure.string/split-lines (slurp full-url))
-            (catch Exception e nil))))
+  [job-name]
+  (let [full-url (url-to-job-configuration job-name)]
+    (try (clojure.string/split-lines (slurp full-url))
+         (catch Exception e nil))))
 
