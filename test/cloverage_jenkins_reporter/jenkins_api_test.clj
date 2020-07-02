@@ -1,7 +1,7 @@
 ;;;
 ;;;   Statistic about code coverage measured by Cloverage reporter.
 ;;;
-;;; Copyright (c) 2015, 2016, 2017  Pavel Tisnovsky, Red Hat
+;;; Copyright (c) 2015, 2016, 2017, 2020  Pavel Tisnovsky, Red Hat
 ;;; All rights reserved.
 ;;;
 ;;; Redistribution and use in source and binary forms, with or without
